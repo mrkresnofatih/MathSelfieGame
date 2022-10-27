@@ -1,0 +1,13 @@
+cloud:
+  aws:
+    credentials:
+      access: access
+      secret: secret
+      region: us-east-1
+infra:
+  aws:
+    sqs:
+      url: queue
+spring:
+  application:
+    name: mathselfieapp

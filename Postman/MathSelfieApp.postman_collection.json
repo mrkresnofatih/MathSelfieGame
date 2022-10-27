@@ -1,0 +1,102 @@
+{
+	"info": {
+		"_postman_id": "4b7af049-64c5-4553-8259-b74e25674add",
+		"name": "MathSelfieApp",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "13142924"
+	},
+	"item": [
+		{
+			"name": "NewGame",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/game/new-game",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"game",
+						"new-game"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SubmitAnswer",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "File",
+							"type": "file",
+							"src": "/C:/Users/LENOVO/Pictures/Screenshot 2022-10-25 080311.png"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/game/submit-answer?ProblemSetId=06cafc41-aa91-4483-bcba-23793e86a959&ProblemId=67b2a250-1605-47d6-89d6-7777536922e5",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"game",
+						"submit-answer"
+					],
+					"query": [
+						{
+							"key": "ProblemSetId",
+							"value": "06cafc41-aa91-4483-bcba-23793e86a959"
+						},
+						{
+							"key": "ProblemId",
+							"value": "67b2a250-1605-47d6-89d6-7777536922e5"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetGame",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/game/get-game?ProblemSetId=ed8f053c-b851-4709-b7b4-2effb73593a0",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"game",
+						"get-game"
+					],
+					"query": [
+						{
+							"key": "ProblemSetId",
+							"value": "ed8f053c-b851-4709-b7b4-2effb73593a0"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
