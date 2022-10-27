@@ -63,7 +63,7 @@ public class GameController {
 
     @PostMapping("/submit-answer")
     public ResponseEntity<BaseFuncResponse<String>> SubmitAnswer(
-            @RequestParam("File") MultipartFile multipartFile,
+            @RequestParam("file") MultipartFile multipartFile,
             @RequestParam("ProblemSetId") String problemSetId,
             @RequestParam("ProblemId") String problemId) {
         logger.info(String.format("SubmitAnswer w/ problemSetId: %s and problemId: %s", problemSetId, problemId));

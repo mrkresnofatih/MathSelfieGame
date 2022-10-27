@@ -19,10 +19,14 @@ export const gameSlice = createSlice({
         resetGame: () => {
             console.log("GameState: ", initialState)
             return initialState
+        },
+        nextProblem: (state) => {
+            state.problemIndex++;
+            console.log("GameState: ", current(state))
         }
     }
 })
 
-export const { setGame, resetGame } = gameSlice.actions;
+export const { setGame, resetGame, nextProblem } = gameSlice.actions;
 
 export default gameSlice.reducer

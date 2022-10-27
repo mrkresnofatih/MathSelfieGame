@@ -1,3 +1,3 @@
 # MathSelfieGame
 
-A simple game of Arithmetics with a countdown timer, and is answered using Facial Expressions. Far from done but the creator is set to follow through.
+A simple game of Arithmetics with a countdown timer, and is answered using Facial Expressions. Stack: Java Spring Boot, AWS DynamoDB, AWS S3, AWS Rekognition, AWS SQS, ReactJS, Redux 🐋🦐🔥

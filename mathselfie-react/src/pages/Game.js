@@ -1,33 +1,93 @@
 import { css } from '@emotion/css'
-import React from 'react'
+import React, { useCallback, useRef, useState } from 'react'
 import Header from '../common/Header'
 import happyIcon from '../assets/emoji-happy.png'
 import sadIcon from '../assets/emoji-sad.png'
 import angryIcon from '../assets/emoji-angry.png'
 import surprisedIcon from '../assets/emoji-surprised.png'
 import Countdown from 'react-countdown'
-import { useGameCurrentProblem } from '../store/selectors/gameSelector'
+import { useGameAboutToEnd, useGameCurrentProblem, useGameScore } from '../store/selectors/gameSelector'
+import Webcam from 'react-webcam'
+import { useDispatch } from 'react-redux'
+import { nextProblem } from '../store/slices/gameSlice'
+import { goToScorePage } from '../store/slices/appSlice'
+import submitAnswerAPI from '../api/submitAnswerAPI'
+import dataurlToBlob from 'dataurl-to-blob'
 
 const Game = () => {
+    const webcamRef = useRef(null)
     const currentProblem = useGameCurrentProblem()
-  return (
-    <div className={gameStyles.body}>
-        <Header/>
-        <TextBoard>
-            <p>{`${currentProblem.firstNumber} ${currentProblem.operation} ${currentProblem.secondNumber} = ?`}</p>
-        </TextBoard>
-        <TextBoard>
-            <CountdownTimer/>
-        </TextBoard>
-        <div style={{flex: 1}} />
-        <PanelBoard
-            happy={currentProblem.options.HAPPY}
-            sad={currentProblem.options.SAD}
-            angry={currentProblem.options.ANGRY}
-            surprised={currentProblem.options.SURPRISED}
-        />
-    </div>
-  )
+    const currentScore = useGameScore()
+    const gameAboutToEnd = useGameAboutToEnd()
+
+    const dispatch = useDispatch()
+    const getProblemFormatter = (currentProblem) => `${currentProblem.firstNumber} ${currentProblem.operation} ${currentProblem.secondNumber} = ?`
+    
+    const [answerMode, setAnswerMode] = useState(false);
+
+    const capture = useCallback(
+        () => {
+            const imageSrc = webcamRef.current.getScreenshot();
+            submitAnswerAPI({
+                problemSetId: currentProblem.problemSetId,
+                problemId: currentProblem.problemId,
+                file: dataurlToBlob(imageSrc)
+            }, () => {})
+        },
+        // eslint-disable-next-line
+        [webcamRef]
+    );
+    return (
+        <div className={gameStyles.body}>
+            <Header/>
+            {answerMode ? (
+                <>
+                    <TextBoard>
+                        <p>{getProblemFormatter(currentProblem)}</p>
+                    </TextBoard>
+                    <TextBoard>
+                    <CountdownTimer
+                        onComplete={() => {
+                            capture();
+                            if (gameAboutToEnd) {
+                                dispatch(goToScorePage());
+                            } else {
+                                setAnswerMode(i => !i);
+                                console.log("CurrentScore: ", currentScore);
+                                console.log("has game ended: ", gameAboutToEnd);
+                                dispatch(nextProblem());
+                            }
+                        }}
+                    />
+                    </TextBoard>
+                </>
+            ): (
+                <>
+                    <TextBoard>
+                    <CountdownTimer
+                        onComplete={() => setAnswerMode(i => !i)}
+                    />
+                    </TextBoard>
+                    <TextBoard>
+                        <p>Please Wait ...</p>
+                    </TextBoard>
+                </>
+            )}
+            <div style={{flex: 1}}>
+                <Webcam 
+                    videoConstraints={{width: 300, height: 500, facingMode: "user"}}
+                    screenshotFormat="blob"
+                    ref={webcamRef}
+                />
+            </div>
+            <PanelBoard
+                happy={answerMode ? currentProblem.options.HAPPY : ""}
+                sad={answerMode ? currentProblem.options.SAD : ""}
+                angry={answerMode ? currentProblem.options.ANGRY : ""}
+                surprised={answerMode ? currentProblem.options.SURPRISED : ""}
+            />
+        </div>
+    )
 }
 
 export default Game
@@ -42,9 +102,12 @@ const gameStyles = {
     `
 }
 
-const CountdownTimer = () => {
+const CountdownTimer = ({onComplete}) => {
     return (
-        <Countdown date={Date.now() + 5000} />
+        <Countdown 
+            date={Date.now() + 5000} 
+            onComplete={onComplete}
+        />
     )
 }
 
@@ -99,7 +162,7 @@ const PanelBoard = ({happy, sad, angry, surprised}) => {
 const panelBoardStyles = {
     body: css`
         display: flex;
-        width: 100vw;
+        width: 100%;
     `,
     innerbody: css`
         display: flex;

@@ -16,10 +16,14 @@ export const appSlice = createSlice({
         goToGamePage: (state) => {
             state.page = routes.GAME
             console.log("AppState: ", current(state))
+        },
+        goToScorePage: (state) => {
+            state.page = routes.SCORE
+            console.log("AppState: ", current(state))
         }
     }
 })
 
-export const { goToGamePage, goToHomePage } = appSlice.actions;
+export const { goToGamePage, goToHomePage, goToScorePage } = appSlice.actions;
 
 export default appSlice.reducer
