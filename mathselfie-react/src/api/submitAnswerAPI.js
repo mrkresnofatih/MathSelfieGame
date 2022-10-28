@@ -5,10 +5,10 @@ const submitAnswerAPI = ({problemSetId, problemId, file}, callback) => {
     const formData = new FormData();
     formData.append("file", file);
 
-    console.log("file: ", file)
-
+    
     const url = `http://localhost:8080/api/v1/game/submit-answer?ProblemSetId=${problemSetId}&ProblemId=${problemId}`
-
+    
+    console.log("url: ", url)
     axios
     .post(url, formData, {
         headers: {

@@ -3,11 +3,13 @@ import React from 'react'
 import { useDispatch } from 'react-redux'
 import logo from '../assets/logo.png'
 import { goToHomePage } from '../store/slices/appSlice'
+import { resetGame } from '../store/slices/gameSlice'
 
 const Header = () => {
     const dispatch = useDispatch();
     const goHome = () => {
         dispatch(goToHomePage())
+        dispatch(resetGame())
     }
   return (
     <div className={headerStyles.body}>

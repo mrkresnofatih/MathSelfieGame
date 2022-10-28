@@ -2,8 +2,8 @@ import { createSlice, current } from '@reduxjs/toolkit'
 
 const initialState = {
     problemSetId: "",
-    problems: [],
-    problemIndex: 0
+    problems: {},
+    problemId: "",
 }
 
 export const gameSlice = createSlice({
@@ -13,7 +13,13 @@ export const gameSlice = createSlice({
         setGame: (state, action) => {
             const { problemSetId, problems } = action.payload;
             state.problemSetId = problemSetId;
-            state.problems.push(...problems)
+            const map = {};
+            problems.forEach(problem => {
+                map[problem.problemId] = problem
+            });
+            state.problems = map;
+            const unansweredProblems = problems.filter(s => s.givenAnswer === "NONE")
+            state.problemId = unansweredProblems.length > 0 ? unansweredProblems[0].problemId : ""
             console.log("GameState: ", current(state))
         },
         resetGame: () => {
@@ -21,7 +27,7 @@ export const gameSlice = createSlice({
             return initialState
         },
         nextProblem: (state) => {
-            state.problemIndex++;
+            state.problemId = Object.values(state.problems).filter(s => s.givenAnswer === "NONE")[0].problemId;
             console.log("GameState: ", current(state))
         }
     }

@@ -4,10 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mrkresnofatih.mathselfieapp.models.*;
-import com.mrkresnofatih.mathselfieapp.services.IGameService;
-import com.mrkresnofatih.mathselfieapp.services.IProblemService;
-import com.mrkresnofatih.mathselfieapp.services.IRekognitionService;
-import com.mrkresnofatih.mathselfieapp.services.IStorageService;
+import com.mrkresnofatih.mathselfieapp.services.*;
 import com.mrkresnofatih.mathselfieapp.utilities.Constants;
 import com.mrkresnofatih.mathselfieapp.utilities.GuidHelper;
 import com.mrkresnofatih.mathselfieapp.utilities.ResponseHelper;
@@ -32,6 +29,7 @@ public class GameController {
     private final IStorageService storageService;
     private final IProblemService problemService;
     private final IRekognitionService rekognitionService;
+    private final IWebSocketService webSocketService;
     private final Logger logger;
     private final QueueMessagingTemplate queueMessagingTemplate;
 
@@ -43,11 +41,12 @@ public class GameController {
             IGameService gameService,
             IStorageService storageService,
             IProblemService problemService,
-            IRekognitionService rekognitionService, QueueMessagingTemplate queueMessagingTemplate) {
+            IRekognitionService rekognitionService, IWebSocketService webSocketService, QueueMessagingTemplate queueMessagingTemplate) {
         this.gameService = gameService;
         this.storageService = storageService;
         this.problemService = problemService;
         this.rekognitionService = rekognitionService;
+        this.webSocketService = webSocketService;
         this.queueMessagingTemplate = queueMessagingTemplate;
         this.logger = LoggerFactory.getLogger(GameController.class);
     }
@@ -136,5 +135,16 @@ public class GameController {
         if (!Objects.isNull(updateResponse.getError())) {
             logger.error("Update problem failed");
         }
+
+        var sendMessageResponse = webSocketService
+                .SendMessage(
+                        new WebSocketMessageRequestModel(
+                                submitAnswerReq.getProblemSetId(),
+                                "submit-answer-success"));
+        if (!Objects.isNull(sendMessageResponse.getError())) {
+            logger.error("Failed to send submit-answer-success");
+        }
+
+        logger.info(String.format("Finish ProcessEventMessage: %s", message));
     }
 }

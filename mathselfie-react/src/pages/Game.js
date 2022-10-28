@@ -1,5 +1,5 @@
 import { css } from '@emotion/css'
-import React, { useCallback, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import Header from '../common/Header'
 import happyIcon from '../assets/emoji-happy.png'
 import sadIcon from '../assets/emoji-sad.png'
@@ -35,8 +35,12 @@ const Game = () => {
             }, () => {})
         },
         // eslint-disable-next-line
-        [webcamRef]
+        [webcamRef, currentProblem]
     );
+
+    useEffect(() => {
+        console.log("Currentproblem: ", currentProblem)
+    }, [currentProblem])
     return (
         <div className={gameStyles.body}>
             <Header/>
