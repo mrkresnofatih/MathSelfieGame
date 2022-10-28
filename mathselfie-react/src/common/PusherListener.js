@@ -12,8 +12,8 @@ const PusherListener = ({children}) => {
 
     useEffect(() => {
 
-        const pusher = new Pusher("362e47c543841cd0393c", {
-            cluster: "ap1",
+        const pusher = new Pusher("pusherkey", {
+            cluster: "pusherregion",
         });
 
         const channel = pusher.subscribe(problemSetId);
